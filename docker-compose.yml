@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:15
+    container_name: postgres_auth
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  auth-service:
+    build: .
+    container_name: auth_service
+    restart: always
+    ports:
+      - "${PORT:-3000}:3000"
+    depends_on:
+      - db
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    command: sh -c "npx knex migrate:latest --knexfile knexfile.js && npm run dev"
+
+
+volumes:
+  pgdata: {}

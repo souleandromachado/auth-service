@@ -17,7 +17,7 @@ services:
     container_name: auth_service
     restart: always
     ports:
-      - "${PORT:-3000}:3000"
+      - "${PORT:-4000}:4000"
     depends_on:
       - db
     env_file:
